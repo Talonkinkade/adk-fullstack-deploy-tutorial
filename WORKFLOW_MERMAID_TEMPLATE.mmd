@@ -1,0 +1,252 @@
+%% ============================================================================
+%% LEARNQWEST MASTER WORKFLOW - 8-Phase Dynamic Agent System
+%% Team LINK Digital Self Partnership
+%% ============================================================================
+%% CHANGELOG:
+%% 2025-11-16-001: Initial 8-phase workflow template with appendable history
+%% ============================================================================
+
+graph TB
+    %% ============================================================================
+    %% PHASE 1: CONTEXT GATHERING
+    %% ============================================================================
+    subgraph Phase1["📋 PHASE 1: Context Gathering"]
+        P1_Start["Session Start<br/>Define Goal"]
+        P1_Docs["Review Existing Docs<br/>README, Architecture, Previous BMADs"]
+        P1_Files["Identify Relevant Files<br/>Code, Config, Dependencies"]
+        P1_State["Document Current State<br/>Git, Deployment, Tech Stack"]
+        P1_Constraints["Capture Constraints<br/>Time, Budget, Tech, Team"]
+        P1_Summary["Generate Context Summary<br/>Deliverable: Context Doc"]
+
+        P1_Start --> P1_Docs
+        P1_Docs --> P1_Files
+        P1_Files --> P1_State
+        P1_State --> P1_Constraints
+        P1_Constraints --> P1_Summary
+    end
+
+    %% ============================================================================
+    %% PHASE 2: BASELINE ESTABLISHMENT
+    %% ============================================================================
+    subgraph Phase2["📸 PHASE 2: Baseline Establishment"]
+        P2_Arch["Document Current Architecture<br/>If Any Exists"]
+        P2_Metrics["Capture Current Metrics<br/>Performance, Cost, Complexity"]
+        P2_Snapshot["Create Codebase Snapshot<br/>Git Commit Hash"]
+        P2_Pain["Identify Pain Points<br/>Current Limitations"]
+        P2_BMAD["Fill BMAD Baseline Section<br/>Deliverable: Before State"]
+
+        P2_Arch --> P2_Metrics
+        P2_Metrics --> P2_Snapshot
+        P2_Snapshot --> P2_Pain
+        P2_Pain --> P2_BMAD
+    end
+
+    %% ============================================================================
+    %% PHASE 3: MILESTONE DEFINITION
+    %% ============================================================================
+    subgraph Phase3["🎯 PHASE 3: Milestone Definition"]
+        P3_Outcomes["Define Measurable Outcomes<br/>Specific Success Criteria"]
+        P3_Acceptance["Set Acceptance Criteria<br/>What Done Looks Like"]
+        P3_Gates["Identify Decision Points<br/>Approval Gates"]
+        P3_Timeline["Create Timeline<br/>Checkpoints & Deadline"]
+        P3_BMAD["Fill BMAD Milestone Section<br/>Deliverable: Target State"]
+
+        P3_Outcomes --> P3_Acceptance
+        P3_Acceptance --> P3_Gates
+        P3_Gates --> P3_Timeline
+        P3_Timeline --> P3_BMAD
+    end
+
+    %% ============================================================================
+    %% PHASE 4: AGENT DISPATCH
+    %% ============================================================================
+    subgraph Phase4["🤖 PHASE 4: Agent Dispatch"]
+        P4_Analyze["Analyze Task Requirements<br/>Complexity, File Count, Type"]
+        P4_Select["Select Optimal Agent(s)<br/>Based on Strengths"]
+        P4_Prompts["Generate Context-Rich Prompts<br/>For Each Agent"]
+        P4_Handoff["Define Handoff Points<br/>Between Agents"]
+        P4_Ready["Deliverable: Agent Prompts Ready<br/>Paste to Agents in Phase 5"]
+
+        P4_Analyze --> P4_Select
+        P4_Select --> P4_Prompts
+        P4_Prompts --> P4_Handoff
+        P4_Handoff --> P4_Ready
+
+        %% Agent selection paths
+        P4_Select -.->|Architecture/Multi-file| Agent_ClaudeCode
+        P4_Select -.->|Code Generation| Agent_Aider
+        P4_Select -.->|Quick Edits| Agent_Cline
+        P4_Select -.->|Validation| Agent_Windsurf
+        P4_Select -.->|Data Processing| Agent_ParserIon
+    end
+
+    %% ============================================================================
+    %% AGENT POOL
+    %% ============================================================================
+    subgraph AgentPool["🎭 Agent Pool"]
+        Agent_ClaudeCode["Claude-Code<br/>Architecture, Multi-file, Git"]
+        Agent_Aider["Aider<br/>Code Gen, Refactor, Tests"]
+        Agent_Cline["Cline<br/>Interactive Edits"]
+        Agent_Windsurf["Windsurf<br/>Validation, Review"]
+        Agent_ParserIon["Parser-Ion<br/>Data Processing, TEKS"]
+    end
+
+    %% ============================================================================
+    %% PHASE 5: CODE EXECUTION
+    %% ============================================================================
+    subgraph Phase5["⚡ PHASE 5: Code Execution"]
+        P5_Paste["Paste Prompts to Agents<br/>From Phase 4"]
+        P5_Monitor["Monitor Agent Output<br/>Track Progress"]
+        P5_Handle["Handle Blockers/Errors<br/>As They Arise"]
+        P5_Validate["Validate Intermediate Outputs<br/>Check Against Criteria"]
+        P5_Commit["Deliverable: Code Commits<br/>Agent Outputs Logged"]
+
+        P5_Paste --> P5_Monitor
+        P5_Monitor --> P5_Handle
+        P5_Handle --> P5_Validate
+        P5_Validate --> P5_Commit
+    end
+
+    %% Agent connections to Phase 5
+    Agent_ClaudeCode -->|executes| P5_Paste
+    Agent_Aider -->|executes| P5_Paste
+    Agent_Cline -->|executes| P5_Paste
+    Agent_Windsurf -->|executes| P5_Paste
+    Agent_ParserIon -->|executes| P5_Paste
+
+    %% ============================================================================
+    %% PHASE 6: VALIDATION & TESTING
+    %% ============================================================================
+    subgraph Phase6["✅ PHASE 6: Validation & Testing"]
+        P6_Tests["Run Automated Tests<br/>Unit, Integration, E2E"]
+        P6_Manual["Manual Validation<br/>Against Acceptance Criteria"]
+        P6_Regression["Check for Regressions<br/>Compare to Baseline"]
+        P6_Performance["Validate Performance<br/>Meets Requirements"]
+        P6_Report["Deliverable: Validation Report<br/>Pass/Fail + Issues"]
+
+        P6_Tests --> P6_Manual
+        P6_Manual --> P6_Regression
+        P6_Regression --> P6_Performance
+        P6_Performance --> P6_Report
+    end
+
+    %% Validation decision point
+    P6_Report -->|All Pass| Phase7
+    P6_Report -->|Failures Found| P5_Paste
+
+    %% ============================================================================
+    %% PHASE 7: ACHIEVEMENT DOCUMENTATION
+    %% ============================================================================
+    subgraph Phase7["📝 PHASE 7: Achievement Documentation"]
+        P7_Outcomes["Document Outcomes<br/>What Was Delivered"]
+        P7_Decisions["Architecture Decisions Table<br/>Alternatives, Rationale, Trade-offs"]
+        P7_Lessons["Record Lessons Learned<br/>What Worked, What Didn't"]
+        P7_Docs["Update Project Documentation<br/>README, Guides, API Docs"]
+        P7_Handoff["Create Handoff for Next Session<br/>What to Pick Up"]
+        P7_BMAD["Fill BMAD Achievement Section<br/>Deliverable: Complete BMAD"]
+
+        P7_Outcomes --> P7_Decisions
+        P7_Decisions --> P7_Lessons
+        P7_Lessons --> P7_Docs
+        P7_Docs --> P7_Handoff
+        P7_Handoff --> P7_BMAD
+    end
+
+    %% ============================================================================
+    %% PHASE 8: MERMAID WORKFLOW UPDATE
+    %% ============================================================================
+    subgraph Phase8["🗺️ PHASE 8: Mermaid Workflow Update"]
+        P8_Node["Add Session Node to Diagram<br/>With Outcomes"]
+        P8_Connect["Connect to Previous Session(s)<br/>Show Flow"]
+        P8_Stats["Update Agent Usage Stats<br/>Track Patterns"]
+        P8_Version["Increment Version/Timestamp<br/>Track Evolution"]
+        P8_Commit["Commit Diagram + BMAD to Git<br/>Deliverable: Updated Workflow"]
+
+        P8_Node --> P8_Connect
+        P8_Connect --> P8_Stats
+        P8_Stats --> P8_Version
+        P8_Version --> P8_Commit
+    end
+
+    %% ============================================================================
+    %% PHASE FLOW
+    %% ============================================================================
+    P1_Summary --> Phase2
+    P2_BMAD --> Phase3
+    P3_BMAD --> Phase4
+    P4_Ready --> Phase5
+    P5_Commit --> Phase6
+    P7_BMAD --> Phase8
+
+    %% Session complete
+    P8_Commit --> NextSession["🎯 Session Complete<br/>Ready for Next Goal"]
+
+    %% ============================================================================
+    %% APPENDABLE SESSION HISTORY
+    %% ============================================================================
+    %% This section grows with each session. Never delete, only append.
+    %% Format: Session_YYYY-MM-DD-###["Session: Goal<br/>Decision: Outcome<br/>Agents: Used<br/>Status: Complete/Blocked"]
+
+    subgraph SessionHistory["📚 Session History (Append Only)"]
+        %% EXAMPLE - Replace with actual sessions
+        Session_2025_11_16_001["Session: Backend Architecture<br/>Decision: PostgreSQL Chosen<br/>Agents: Claude-Code, Aider<br/>Status: Complete"]
+        Session_2025_11_17_001["Session: Schema Generation<br/>Deliverable: models.py + migrations<br/>Agents: Aider, Windsurf<br/>Status: Complete"]
+        Session_2025_11_18_001["Session: API Endpoints<br/>Deliverable: FastAPI routes<br/>Agents: Aider<br/>Status: In Progress"]
+
+        %% Session connections show flow
+        Session_2025_11_16_001 --> Session_2025_11_17_001
+        Session_2025_11_17_001 --> Session_2025_11_18_001
+    end
+
+    %% Connect completed sessions to history
+    NextSession -.->|archives to| SessionHistory
+
+    %% ============================================================================
+    %% DECISION POINTS & LOOPS
+    %% ============================================================================
+    %% Regression loops (when to go back)
+    P4_Select -.->|Agent fails, reselect| P4_Analyze
+    P3_Outcomes -.->|Milestone unachievable| P2_BMAD
+    P1_Docs -.->|Major new info| P1_Start
+
+    %% ============================================================================
+    %% STYLING
+    %% ============================================================================
+    classDef phase1 fill:#e3f2fd,stroke:#1976d2,color:#000,stroke-width:2px
+    classDef phase2 fill:#f3e5f5,stroke:#7b1fa2,color:#000,stroke-width:2px
+    classDef phase3 fill:#fff3e0,stroke:#f57c00,color:#000,stroke-width:2px
+    classDef phase4 fill:#e8f5e9,stroke:#388e3c,color:#000,stroke-width:2px
+    classDef phase5 fill:#fce4ec,stroke:#c2185b,color:#000,stroke-width:2px
+    classDef phase6 fill:#e0f2f1,stroke:#00796b,color:#000,stroke-width:2px
+    classDef phase7 fill:#fff9c4,stroke:#f9a825,color:#000,stroke-width:2px
+    classDef phase8 fill:#f1f8e9,stroke:#689f38,color:#000,stroke-width:2px
+    classDef agent fill:#424242,stroke:#212121,color:#fff,stroke-width:3px
+    classDef session fill:#b39ddb,stroke:#5e35b1,color:#fff,stroke-width:2px
+    classDef complete fill:#81c784,stroke:#388e3c,color:#000,stroke-width:2px
+
+    class P1_Start,P1_Docs,P1_Files,P1_State,P1_Constraints,P1_Summary phase1
+    class P2_Arch,P2_Metrics,P2_Snapshot,P2_Pain,P2_BMAD phase2
+    class P3_Outcomes,P3_Acceptance,P3_Gates,P3_Timeline,P3_BMAD phase3
+    class P4_Analyze,P4_Select,P4_Prompts,P4_Handoff,P4_Ready phase4
+    class P5_Paste,P5_Monitor,P5_Handle,P5_Validate,P5_Commit phase5
+    class P6_Tests,P6_Manual,P6_Regression,P6_Performance,P6_Report phase6
+    class P7_Outcomes,P7_Decisions,P7_Lessons,P7_Docs,P7_Handoff,P7_BMAD phase7
+    class P8_Node,P8_Connect,P8_Stats,P8_Version,P8_Commit phase8
+    class Agent_ClaudeCode,Agent_Aider,Agent_Cline,Agent_Windsurf,Agent_ParserIon agent
+    class Session_2025_11_16_001,Session_2025_11_17_001 session
+    class Session_2025_11_18_001 phase5
+    class NextSession complete
+
+%% ============================================================================
+%% USAGE INSTRUCTIONS
+%% ============================================================================
+%% 1. At end of each session, add a new node to SessionHistory section
+%% 2. Format: Session_YYYY_MM_DD_###["Session: [Goal]<br/>Decision/Deliverable: [Outcome]<br/>Agents: [Used]<br/>Status: [Complete/Blocked/In Progress]"]
+%% 3. Connect new node to previous session: Session_Previous --> Session_New
+%% 4. Update changelog at top with new entry
+%% 5. Commit to git
+%% 6. NEVER delete old sessions - this is append-only history
+%%
+%% Example addition:
+%% Session_2025_11_19_001["Session: Deploy to Production<br/>Deliverable: Live on Vercel<br/>Agents: Claude-Code<br/>Status: Complete"]
+%% Session_2025_11_18_001 --> Session_2025_11_19_001
