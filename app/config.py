@@ -1,15 +1,13 @@
 """
-Configuration for ADK Agent Engine Deployment
+Configuration for Anthropic Claude Agent
 
-This file handles all configuration needed to deploy your agent to Google Cloud.
+This file handles all configuration needed to run your agent with Claude.
 """
 
 import os
 from dataclasses import dataclass
 from pathlib import Path
 
-import google.auth
-import vertexai
 
 # =============================================================================
 # STEP 1: Load Environment Variables
@@ -40,16 +38,18 @@ def load_environment_variables() -> None:
 class AgentConfiguration:
     """Main configuration for your agent."""
 
-    # The AI model to use (you can change this if needed)
-    model: str = os.environ.get("MODEL", "gemini-2.5-flash")
+    # The AI model to use - Claude Sonnet 4.5
+    model: str = os.environ.get("MODEL", "claude-sonnet-4-5-20250929")
 
-    # Deployment name (can have hyphens, used for display in Agent Engine)
+    # Agent name (can have hyphens, used for display)
     deployment_name: str = os.environ.get("AGENT_NAME", "goal-planning-agent")
 
-    # Google Cloud settings
-    project_id: str | None = None
-    location: str = "us-central1"
-    staging_bucket: str | None = None
+    # Anthropic API Key
+    anthropic_api_key: str | None = None
+
+    # Server settings
+    host: str = "127.0.0.1"
+    port: int = 8000
 
     def __post_init__(self) -> None:
         """Load environment variables and validate required settings."""
@@ -57,38 +57,18 @@ class AgentConfiguration:
         # Load environment variables first
         load_environment_variables()
 
-        # Validate and set project_id
-        self.project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
-        if not self.project_id:
-            # Try fallback to gcloud default
-            try:
-                _, self.project_id = google.auth.default()
-            except Exception:
-                pass
-
-        if not self.project_id:
+        # Validate and set API key
+        self.anthropic_api_key = os.environ.get("ANTHROPIC_API_KEY")
+        if not self.anthropic_api_key:
             raise ValueError(
-                "❌ Missing GOOGLE_CLOUD_PROJECT environment variable!\n"
-                "Please set it in your .env file or run:\n"
-                "  gcloud config set project YOUR_PROJECT_ID"
+                "❌ Missing ANTHROPIC_API_KEY environment variable!\n"
+                "Please set it in your .env file.\n"
+                "You can get an API key from: https://console.anthropic.com/"
             )
 
-        # Set location (with validation)
-        self.location = os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
-        if not self.location:
-            raise ValueError(
-                "❌ Missing GOOGLE_CLOUD_LOCATION environment variable!\n"
-                "Please set it in your .env file (e.g., 'us-central1')"
-            )
-
-        # Set staging bucket (required for Agent Engine deployment)
-        self.staging_bucket = os.environ.get("GOOGLE_CLOUD_STAGING_BUCKET")
-        if not self.staging_bucket:
-            raise ValueError(
-                "❌ Missing GOOGLE_CLOUD_STAGING_BUCKET environment variable!\n"
-                "This is required for Agent Engine deployment.\n"
-                "Please add it to your .env file."
-            )
+        # Override host/port from environment if provided
+        self.host = os.environ.get("API_HOST", self.host)
+        self.port = int(os.environ.get("API_PORT", str(self.port)))
 
     @property
     def internal_agent_name(self) -> str:
@@ -107,134 +87,27 @@ class AgentConfiguration:
         return name
 
 
-@dataclass
-class DeploymentConfiguration:
-    """Configuration needed for deployment to Agent Engine."""
-
-    project: str
-    location: str
-    agent_name: str
-    requirements_file: str
-    extra_packages: list[str]
-    staging_bucket: str
-
-
 # =============================================================================
 # STEP 3: Initialize Configuration
 # =============================================================================
 
 
-def initialize_vertex_ai(config: AgentConfiguration) -> None:
-    """Initialize Vertex AI with the provided configuration."""
-    try:
-        print("\n🔧 Initializing Vertex AI...")
-        print(f"  Project: {config.project_id}")
-        print(f"  Location: {config.location}")
-        print(f"  Staging Bucket: {config.staging_bucket or 'Not set'}")
-
-        # Initialize Vertex AI (config values already validated in __post_init__)
-        if config.staging_bucket:
-            vertexai.init(
-                project=config.project_id,
-                location=config.location,
-                staging_bucket=config.staging_bucket,
-            )
-        else:
-            vertexai.init(project=config.project_id, location=config.location)
-
-        print(f"✅ Vertex AI initialized successfully!")
-
-        if not config.staging_bucket:
-            print(
-                "ℹ️  Add GOOGLE_CLOUD_STAGING_BUCKET to .env for Agent Engine deployment"
-            )
-
-    except Exception as e:
-        print(f"❌ Failed to initialize Vertex AI: {e}")
-        print("\n🔧 Setup checklist:")
-        print("  1. Set GOOGLE_CLOUD_PROJECT in .env file")
-        print("  2. Run: gcloud auth application-default login")
-        print("  3. Run: gcloud config set project YOUR_PROJECT_ID")
-        print("  4. Enable required APIs in Google Cloud Console")
+def get_config() -> AgentConfiguration:
+    """Get or create the configuration singleton."""
+    global _config
+    if _config is None:
+        _config = AgentConfiguration()
+        # Print summary
+        print("\n📋 Configuration Summary:")
+        print(f"  Agent Name: {_config.deployment_name}")
+        print(f"  Internal Name: {_config.internal_agent_name}")
+        print(f"  Model: {_config.model}")
+        print(f"  API Key: {'✓ Set' if _config.anthropic_api_key else '✗ Missing'}")
+        print(f"  Server: {_config.host}:{_config.port}")
+        print("=" * 50)
+    return _config
 
 
-def get_deployment_config() -> DeploymentConfiguration:
-    """
-    Get deployment configuration with validation.
-
-    This function validates all required settings before deployment.
-    """
-    # Use validated config values (already checked in __post_init__)
-    project_id = config.project_id
-    if not project_id:
-        raise ValueError(
-            "❌ Project ID validation failed. This should not happen after __post_init__."
-        )
-
-    if not config.staging_bucket:
-        raise ValueError(
-            "❌ Missing GOOGLE_CLOUD_STAGING_BUCKET environment variable!\n"
-            "This is required for Agent Engine deployment.\n"
-            "Please add it to your .env file."
-        )
-
-    # Use centralized agent name from config
-    agent_name = config.deployment_name
-    if not agent_name:
-        raise ValueError(
-            "❌ Missing agent name. Please set AGENT_NAME in .env file (e.g., 'my-research-agent')"
-        )
-
-    # Check requirements file exists
-    requirements_file = os.environ.get("REQUIREMENTS_FILE", ".requirements.txt")
-    if not Path(requirements_file).exists():
-        raise ValueError(
-            f"❌ Requirements file not found: {requirements_file}\n"
-            "Please run 'uv export > .requirements.txt' to generate it"
-        )
-
-    # Parse extra packages (code to include in deployment)
-    extra_packages_str = os.environ.get("EXTRA_PACKAGES", "./app")
-    extra_packages = [
-        pkg.strip() for pkg in extra_packages_str.split(",") if pkg.strip()
-    ]
-
-    if not extra_packages:
-        raise ValueError(
-            "❌ No extra packages specified. Please set EXTRA_PACKAGES in .env file "
-            "or ensure './app' directory exists"
-        )
-
-    return DeploymentConfiguration(
-        project=project_id,
-        location=config.location,
-        agent_name=agent_name,
-        requirements_file=requirements_file,
-        extra_packages=extra_packages,
-        staging_bucket=config.staging_bucket,
-    )
-
-
-def get_project_id() -> str | None:
-    """Get project ID from config (already validated in __post_init__)."""
-    return config.project_id
-
-
-# =============================================================================
-# STEP 4: Initialize Everything
-# =============================================================================
-
-# Create main configuration (this will now load .env and validate)
-config = AgentConfiguration()
-
-# Initialize Vertex AI
-initialize_vertex_ai(config)
-
-# Print summary
-print("\n📋 Configuration Summary:")
-print(f"  Agent Name: {config.deployment_name}")
-print(f"  Internal Name: {config.internal_agent_name}")
-print(f"  Model: {config.model}")
-print(f"  Project: {get_project_id()}")
-print(f"  Location: {config.location}")
-print("=" * 50)
+# Lazy-loaded configuration singleton
+_config: AgentConfiguration | None = None
+config = get_config()

@@ -11,8 +11,10 @@ authors = [
     {name = "Brandon Hancock", email = "brandon@brandonhancock.io"},
 ]
 dependencies = [
-    "google-adk==1.6.1",
-    "python-dotenv",  
+    "anthropic>=0.39.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-dotenv",
 ]
 
 requires-python = ">=3.10,<3.13"
