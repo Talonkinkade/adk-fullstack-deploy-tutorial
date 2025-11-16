@@ -11,15 +11,18 @@ from typing import Any, Dict, List
 import google.genai.types as genai_types
 from google.adk.agents import LlmAgent
 from google.adk.planners import BuiltInPlanner
-from google.adk.tools import Tool
 
 from app.config import config
+
+# Use premium model for LearnQwest agents for superior reasoning and quality
+# Options: "gemini-2.0-flash-exp", "gemini-1.5-pro", "gemini-2.5-flash"
+LEARNQWEST_MODEL = "gemini-2.0-flash-exp"  # Upgraded for best performance
 
 
 # --- LEARNQWEST FILESYSTEM AGENT ---
 learnqwest_filesystem_agent = LlmAgent(
-    name="learnqwest-filesystem-agent",
-    model=config.model,
+    name="learnqwest_filesystem_agent",
+    model=LEARNQWEST_MODEL,
     description="An intelligent agent specialized in managing LearnQwest filesystem operations including file organization, reading, writing, and directory management.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -89,8 +92,8 @@ learnqwest_filesystem_agent = LlmAgent(
 
 # --- LEARNQWEST DOCUMENTATION AGENT ---
 learnqwest_documentation_agent = LlmAgent(
-    name="learnqwest-documentation-agent",
-    model=config.model,
+    name="learnqwest_documentation_agent",
+    model=LEARNQWEST_MODEL,
     description="An intelligent agent specialized in creating, maintaining, and organizing documentation within the LearnQwest ecosystem.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -174,8 +177,8 @@ learnqwest_documentation_agent = LlmAgent(
 
 # --- LEARNQWEST WORKFLOW AGENT ---
 learnqwest_workflow_agent = LlmAgent(
-    name="learnqwest-workflow-agent",
-    model=config.model,
+    name="learnqwest_workflow_agent",
+    model=LEARNQWEST_MODEL,
     description="An intelligent agent specialized in automating and managing workflows within the LearnQwest ecosystem.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
@@ -264,8 +267,8 @@ learnqwest_workflow_agent = LlmAgent(
 
 # --- LEARNQWEST ORCHESTRATOR AGENT ---
 learnqwest_orchestrator_agent = LlmAgent(
-    name="learnqwest-orchestrator",
-    model=config.model,
+    name="learnqwest_orchestrator",
+    model=LEARNQWEST_MODEL,
     description="Master orchestrator agent that coordinates between filesystem, documentation, and workflow agents to accomplish complex LearnQwest tasks.",
     planner=BuiltInPlanner(
         thinking_config=genai_types.ThinkingConfig(include_thoughts=True)
