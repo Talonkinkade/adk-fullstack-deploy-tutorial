@@ -1,0 +1,28 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY pyproject.toml ./
+COPY uv.lock* ./
+
+# Install uv
+RUN pip install uv
+
+# Install project dependencies
+RUN uv pip install --system --no-cache -e .
+RUN uv pip install --system --no-cache neo4j redis pyyaml
+
+# Copy application code
+COPY app/ /app/app/
+
+# Expose port
+EXPOSE 8001
+
+# Run the agent platform
+CMD ["python", "-m", "app.agent_platform.platform"]

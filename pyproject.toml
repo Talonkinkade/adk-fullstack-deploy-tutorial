@@ -12,7 +12,12 @@ authors = [
 ]
 dependencies = [
     "google-adk==1.6.1",
-    "python-dotenv",  
+    "python-dotenv",
+    # Agent Platform dependencies
+    "pydantic>=2.0.0",
+    "neo4j>=5.15.0",
+    "redis>=5.0.0",
+    "pyyaml>=6.0",
 ]
 
 requires-python = ">=3.10,<3.13"
