@@ -1,0 +1,217 @@
+%% LEARNQWEST QWEST-AIDER ORCHESTRATION WORKFLOW
+%% Interactive Mermaid Diagram
+%% Last Updated: 2025-11-16
+%% Purpose: Visual tracking of multi-agent sessions with appendable history
+
+graph TD
+    %% ===== MASTER ORCHESTRATION FLOW =====
+    Start([🎯 Session Start]) --> Phase1
+
+    %% PHASE 1: CONTEXT GATHERING
+    Phase1[🔍 Phase 1: Context Gathering<br/>Agent: Claude-Code<br/>Duration: 10-15 min]
+    Phase1 --> Phase1A{Context<br/>Complete?}
+    Phase1A -->|No - Missing Info| Phase1B[Ask User for Clarification]
+    Phase1B --> Phase1
+    Phase1A -->|Yes| Phase2
+
+    %% PHASE 2: BASELINE CAPTURE
+    Phase2[📸 Phase 2: Baseline Capture<br/>Agent: Claude-Code<br/>Duration: 5-10 min]
+    Phase2 --> Phase2A[Snapshot Current State]
+    Phase2A --> Phase2B[Initialize BMAD File]
+    Phase2B --> Phase2C[Git Commit Baseline]
+    Phase2C --> Phase3
+
+    %% PHASE 3: MILESTONE DEFINITION
+    Phase3[🎯 Phase 3: Milestone Definition<br/>Agent: Claude-Code + User<br/>Duration: 5-10 min]
+    Phase3 --> Phase3A{Milestone<br/>Clear?}
+    Phase3A -->|Ambiguous| Phase3B[Clarify with User]
+    Phase3B --> Phase3
+    Phase3A -->|Clear| Phase3C[Define Success Criteria]
+    Phase3C --> Phase3D[Set Time Box]
+    Phase3D --> Phase3E[Git Commit Milestone]
+    Phase3E --> Phase4
+
+    %% PHASE 4: AGENT DISPATCH
+    Phase4[🚀 Phase 4: Agent Dispatch<br/>Agent: Claude-Code Orchestrator<br/>Duration: 5 min]
+    Phase4 --> Phase4A[Decompose Tasks]
+    Phase4A --> Phase4B[Generate Agent Prompts]
+    Phase4B --> Phase4C{Which Agent<br/>for Code?}
+    Phase4C -->|Aider| Phase5A[Aider Code Generation]
+    Phase4C -->|Cline| Phase5B[Cline Code Generation]
+    Phase4C -->|Claude-Code| Phase5C[Claude-Code Analysis/Docs]
+    Phase4C -->|Windsurf| Phase5D[Windsurf Validation]
+
+    %% PHASE 5: CODE EXECUTION (Multiple Agents)
+    Phase5A --> Phase5
+    Phase5B --> Phase5
+    Phase5C --> Phase5
+    Phase5D --> Phase5
+
+    Phase5[💻 Phase 5: Code Execution<br/>Duration: 1-4 hours]
+    Phase5 --> Phase5E{Code<br/>Working?}
+    Phase5E -->|Errors| Phase5F[Debug & Iterate]
+    Phase5F --> Phase5
+    Phase5E -->|Basic Functionality| Phase5G[Document Changes in BMAD]
+    Phase5G --> Phase6
+
+    %% PHASE 6: VALIDATION & TESTING
+    Phase6[✅ Phase 6: Validation<br/>Agent: Windsurf<br/>Duration: 30-60 min]
+    Phase6 --> Phase6A[Run Test Suite]
+    Phase6A --> Phase6B[Verify Milestone Criteria]
+    Phase6B --> Phase6C{All Tests<br/>Pass?}
+    Phase6C -->|Critical Failure| Phase6D[Triage Issues]
+    Phase6D --> Phase6E{Fixable?}
+    Phase6E -->|Yes| Phase5
+    Phase6E -->|No - Milestone Unrealistic| Phase3
+    Phase6C -->|Pass or Minor Issues| Phase6F[Quality Audit]
+    Phase6F --> Phase6G[Git Commit Validation Results]
+    Phase6G --> Phase7
+
+    %% PHASE 7: ACHIEVEMENT DOCUMENTATION
+    Phase7[📝 Phase 7: Achievement Docs<br/>Agent: Claude-Code<br/>Duration: 15-20 min]
+    Phase7 --> Phase7A[Fill Architecture Decisions Table]
+    Phase7A --> Phase7B[Document Implementation]
+    Phase7B --> Phase7C[Capture Lessons Learned]
+    Phase7C --> Phase7D[List Open Questions]
+    Phase7D --> Phase7E[Complete BMAD File]
+    Phase7E --> Phase7F[Git Commit BMAD]
+    Phase7F --> Phase8
+
+    %% PHASE 8: MERMAID UPDATE
+    Phase8[📊 Phase 8: Mermaid Update<br/>Agent: Claude-Code<br/>Duration: 10 min]
+    Phase8 --> Phase8A[Append Session to History]
+    Phase8A --> Phase8B[Add Decision Nodes]
+    Phase8B --> Phase8C[Update Statistics]
+    Phase8C --> Phase8D[Git Commit Mermaid]
+    Phase8D --> SessionEnd
+
+    SessionEnd([✅ Session Complete])
+    SessionEnd -.->|Next Session| Start
+
+    %% ===== STYLING =====
+    classDef phaseContext fill:#E3F2FD,stroke:#1976D2,stroke-width:2px
+    classDef phaseBaseline fill:#FFF3E0,stroke:#F57C00,stroke-width:2px
+    classDef phaseMilestone fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px
+    classDef phaseDispatch fill:#E8F5E9,stroke:#388E3C,stroke-width:2px
+    classDef phaseCode fill:#FFF9C4,stroke:#F9A825,stroke-width:2px
+    classDef phaseValidate fill:#FCE4EC,stroke:#C2185B,stroke-width:2px
+    classDef phaseAchievement fill:#E0F2F1,stroke:#00796B,stroke-width:2px
+    classDef phaseMermaid fill:#EFEBE9,stroke:#5D4037,stroke-width:2px
+    classDef decision fill:#FFF,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    classDef success fill:#C8E6C9,stroke:#2E7D32,stroke-width:3px
+    classDef agent fill:#BBDEFB,stroke:#1565C0,stroke-width:2px
+
+    class Phase1,Phase1A,Phase1B phaseContext
+    class Phase2,Phase2A,Phase2B,Phase2C phaseBaseline
+    class Phase3,Phase3A,Phase3B,Phase3C,Phase3D,Phase3E phaseMilestone
+    class Phase4,Phase4A,Phase4B,Phase4C phaseDispatch
+    class Phase5,Phase5A,Phase5B,Phase5C,Phase5D,Phase5E,Phase5F,Phase5G phaseCode
+    class Phase6,Phase6A,Phase6B,Phase6C,Phase6D,Phase6E,Phase6F,Phase6G phaseValidate
+    class Phase7,Phase7A,Phase7B,Phase7C,Phase7D,Phase7E,Phase7F phaseAchievement
+    class Phase8,Phase8A,Phase8B,Phase8C,Phase8D phaseMermaid
+    class SessionEnd success
+
+%% ===== APPENDABLE SESSION HISTORY =====
+%% Add new sessions below this line
+%% Each session gets its own subgraph with unique node IDs
+
+%% SESSION TEMPLATE (Copy and modify for each new session)
+%% %% SESSION: YYYY-MM-DD - [Session Name]
+%% subgraph Session_YYYYMMDD[" "]
+%%     direction LR
+%%     S_START([Session: YYYY-MM-DD<br/>[Session Name]]) --> S_PHASE1[Phase 1: Context]
+%%     S_PHASE1 --> S_PHASE2[Phase 2: Baseline]
+%%     S_PHASE2 --> S_PHASE3[Phase 3: Milestone]
+%%     S_PHASE3 --> S_DECISION{Key Decision}
+%%     S_DECISION -->|Choice A| S_PHASE4A[Phase 4: Dispatch A]
+%%     S_DECISION -->|Choice B Rejected| S_REJECTED[Rejected: Reason]
+%%     S_PHASE4A --> S_PHASE5[Phase 5: Code - Agent]
+%%     S_PHASE5 --> S_PHASE6[Phase 6: Validate]
+%%     S_PHASE6 --> S_PHASE7[Phase 7: Docs]
+%%     S_PHASE7 --> S_PHASE8[Phase 8: Mermaid]
+%%     S_PHASE8 --> S_END([✅ Complete])
+%%
+%%     S_END -.->|Next Session| NEXT_START
+%% end
+
+%% ===== SESSION HISTORY STARTS HERE =====
+
+%% SESSION: 2025-11-16 - Backend Architecture Decision (EXAMPLE)
+subgraph Session_20251116["SESSION: 2025-11-16 - Backend Architecture Decision"]
+    direction LR
+    S1_START([🎯 Session Start<br/>Backend Decision]) --> S1_P1[Phase 1: Context<br/>LearnQwest Backend]
+    S1_P1 --> S1_P2[Phase 2: Baseline<br/>No existing backend]
+    S1_P2 --> S1_P3[Phase 3: Milestone<br/>Choose DB + Schema]
+    S1_P3 --> S1_DECISION{Database<br/>Decision}
+    S1_DECISION -->|✅ PostgreSQL| S1_P4[Phase 4: Dispatch<br/>Claude+Aider]
+    S1_DECISION -->|❌ Neo4j| S1_REJ1[Rejected: Too expensive<br/>$300+/mo]
+    S1_DECISION -->|❌ JSON Files| S1_REJ2[Rejected: No relations<br/>No queries]
+    S1_P4 --> S1_P5[Phase 5: Code<br/>Aider: Schema + Migrations]
+    S1_P5 --> S1_P6[Phase 6: Validate<br/>Windsurf: Tests ✅]
+    S1_P6 --> S1_P7[Phase 7: Docs<br/>BMAD Completed]
+    S1_P7 --> S1_P8[Phase 8: Mermaid<br/>History Updated]
+    S1_P8 --> S1_END([✅ Complete<br/>Duration: 2.5 hrs])
+
+    S1_END -.->|Next Session| S2_START
+end
+
+%% SESSION: YYYY-MM-DD - [Your Next Session]
+%% Uncomment and fill when ready
+%% subgraph Session_YYYYMMDD["SESSION: YYYY-MM-DD - [Session Name]"]
+%%     direction LR
+%%     S2_START([Session Start]) --> S2_P1[Phase 1]
+%%     %% ... add your session flow here
+%%     S2_P1 --> S2_END([Complete])
+%% end
+
+%% ===== STATISTICS SECTION =====
+%% Update these after each session
+
+%% STATISTICS (as of 2025-11-16)
+%% Total Sessions: 1
+%% Total Phases Completed: 8
+%% Total Agent Invocations: 4 (Claude-Code x2, Aider x1, Windsurf x1)
+%% Average Session Duration: 2.5 hours
+%% Success Rate: 100%
+%% Lines of Code Generated: 489
+%% Test Coverage: 87%
+%% Decisions Documented: 1
+
+%% ===== LEGEND =====
+
+subgraph Legend[" LEGEND "]
+    direction TB
+    L1[🔍 Context Phase]:::phaseContext
+    L2[📸 Baseline Phase]:::phaseBaseline
+    L3[🎯 Milestone Phase]:::phaseMilestone
+    L4[🚀 Dispatch Phase]:::phaseDispatch
+    L5[💻 Code Phase]:::phaseCode
+    L6[✅ Validation Phase]:::phaseValidate
+    L7[📝 Achievement Phase]:::phaseAchievement
+    L8[📊 Mermaid Phase]:::phaseMermaid
+    L9([✅ Success]):::success
+    L10{Decision Point}:::decision
+end
+
+%% ===== NOTES =====
+%% This diagram is designed to grow with each session
+%% Copy the SESSION TEMPLATE above and add your session below the last one
+%% Update STATISTICS after each session
+%% Link sessions together with dotted arrows: S1_END -.->|Next Session| S2_START
+%%
+%% Color Coding:
+%% - Blue (Context): Information gathering
+%% - Orange (Baseline): State snapshot
+%% - Purple (Milestone): Goal definition
+%% - Green (Dispatch): Agent assignment
+%% - Yellow (Code): Development work
+%% - Pink (Validation): Testing
+%% - Teal (Achievement): Documentation
+%% - Brown (Mermaid): Diagram update
+%% - Light Green (Success): Completed sessions
+%%
+%% To render:
+%% 1. Copy this file contents
+%% 2. Paste into Mermaid Live Editor: https://mermaid.live/
+%% 3. Or use Mermaid CLI: mmdc -i WORKFLOW_MERMAID_TEMPLATE.mmd -o workflow.png
+%% 4. Or render in VS Code with Mermaid extension
