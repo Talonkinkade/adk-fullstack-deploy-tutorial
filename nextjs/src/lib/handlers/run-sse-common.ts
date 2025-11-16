@@ -15,12 +15,25 @@ function getAdkAppName(): string {
 }
 
 /**
+ * File data structure for uploaded files
+ */
+export interface FileData {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  data: string; // base64 encoded
+  category: 'image' | 'document' | 'code' | 'data' | 'other';
+}
+
+/**
  * Common request data structure for streaming
  */
 export interface ProcessedStreamRequest {
   message: string;
   userId: string;
   sessionId: string;
+  files?: FileData[];
 }
 
 /**
@@ -32,6 +45,7 @@ export interface AgentEnginePayload {
     user_id: string;
     session_id: string;
     message: string;
+    files?: FileData[];
   };
 }
 
@@ -98,6 +112,7 @@ export async function parseStreamRequest(request: NextRequest): Promise<{
       message?: string;
       userId?: string;
       sessionId?: string;
+      files?: FileData[];
     };
 
     // Validate the request structure
@@ -111,6 +126,7 @@ export async function parseStreamRequest(request: NextRequest): Promise<{
         message: requestBody.message!,
         userId: requestBody.userId!,
         sessionId: requestBody.sessionId!,
+        files: requestBody.files,
       },
       validation: { isValid: true },
     };
@@ -176,6 +192,7 @@ export function formatAgentEnginePayload(
       user_id: requestData.userId,
       session_id: requestData.sessionId,
       message: requestData.message,
+      files: requestData.files,
     },
   };
 }

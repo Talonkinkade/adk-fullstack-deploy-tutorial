@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Send } from "lucide-react";
+import FileUpload, { UploadedFile } from "./FileUpload";
 
 interface InputFormProps {
-  onSubmit: (query: string) => void;
+  onSubmit: (query: string, files?: UploadedFile[]) => void;
   isLoading: boolean;
   context?: "homepage" | "chat"; // Add context prop for different placeholder text
 }
@@ -17,6 +18,7 @@ export function InputForm({
   context = "homepage",
 }: InputFormProps): React.JSX.Element {
   const [inputValue, setInputValue] = useState("");
+  const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -29,8 +31,9 @@ export function InputForm({
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (inputValue.trim() && !isLoading) {
-      onSubmit(inputValue.trim());
+      onSubmit(inputValue.trim(), files.length > 0 ? files : undefined);
       setInputValue("");
+      setFiles([]);
     }
   };
 
@@ -60,9 +63,14 @@ export function InputForm({
           backdrop-blur-sm
         `}
         >
-          {/* Input Area */}
-          <div className="flex-1 relative">
-            <Textarea
+          <div className="w-full space-y-3">
+            {/* File Upload Area */}
+            <FileUpload files={files} onFilesChange={setFiles} />
+
+            {/* Input Area */}
+            <div className="flex items-end gap-3">
+              <div className="flex-1 relative">
+                <Textarea
               ref={textareaRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
@@ -93,10 +101,10 @@ export function InputForm({
                 {inputValue.length}/2000
               </div>
             )}
-          </div>
+              </div>
 
-          {/* Send Button */}
-          <Button
+              {/* Send Button */}
+              <Button
             type="submit"
             size="sm"
             disabled={!inputValue.trim() || isLoading}
@@ -121,7 +129,9 @@ export function InputForm({
                 </span>
               </>
             )}
-          </Button>
+              </Button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

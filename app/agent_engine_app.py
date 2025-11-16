@@ -9,7 +9,7 @@ import datetime
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator, Optional
 
 import vertexai
 from google.adk.artifacts import GcsArtifactService
@@ -24,6 +24,7 @@ from app.config import config, get_deployment_config
 from app.utils.gcs import create_bucket_if_not_exists
 from app.utils.tracing import CloudTraceLoggingSpanExporter
 from app.utils.typing import Feedback
+from app.utils.file_handler import get_file_handler
 
 
 class AgentEngineApp(AdkApp):
@@ -57,8 +58,51 @@ class AgentEngineApp(AdkApp):
     def register_operations(self) -> dict[str, list[str]]:
         """Register available operations for the agent."""
         operations = super().register_operations()
-        operations[""] = operations[""] + ["register_feedback"]
+        operations[""] = operations[""] + ["register_feedback", "stream_query"]
         return operations
+
+    def stream_query(
+        self,
+        user_id: str,
+        session_id: str,
+        message: str,
+        files: Optional[list[dict[str, Any]]] = None,
+    ) -> Iterator[str]:
+        """
+        Stream a query to the agent with optional file attachments.
+
+        Args:
+            user_id: User identifier
+            session_id: Session identifier
+            message: User message/query
+            files: Optional list of file data dictionaries
+
+        Yields:
+            Streamed response chunks
+        """
+        # Process files if present
+        enhanced_message = message
+        if files and len(files) > 0:
+            print(f"📎 Processing {len(files)} file(s) for user {user_id}, session {session_id}")
+
+            file_handler = get_file_handler()
+            processed_files = file_handler.process_files(files)
+
+            # Create file context
+            file_context = file_handler.create_file_context_message(processed_files)
+
+            # Enhance message with file context
+            enhanced_message = f"{message}\n\n{file_context}"
+
+            print(f"✅ Files processed and added to context")
+
+        # Stream the query using the base ADK app functionality
+        # The query method is provided by AdkApp parent class
+        yield from self.query(
+            user_id=user_id,
+            session_id=session_id,
+            new_message=enhanced_message,
+        )
 
     def clone(self) -> "AgentEngineApp":
         """Create a copy of this application."""

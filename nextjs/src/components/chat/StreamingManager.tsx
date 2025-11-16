@@ -5,6 +5,7 @@ import { useStreaming } from "@/hooks/useStreaming";
 import { useBackendHealth } from "@/hooks/useBackendHealth";
 import { Message } from "@/types";
 import { ProcessedEvent } from "@/components/ActivityTimeline";
+import { UploadedFile } from "@/components/FileUpload";
 
 interface StreamingManagerProps {
   userId: string;
@@ -18,7 +19,7 @@ interface StreamingManagerProps {
 export interface StreamingManagerReturn {
   isLoading: boolean;
   currentAgent: string;
-  submitMessage: (message: string) => Promise<void>;
+  submitMessage: (message: string, files?: UploadedFile[]) => Promise<void>;
 }
 
 /**
@@ -47,7 +48,7 @@ export function useStreamingManager({
 
   // Submit a message for streaming
   const submitMessage = useCallback(
-    async (message: string): Promise<void> => {
+    async (message: string, files?: UploadedFile[]): Promise<void> => {
       if (!message.trim() || !userId || !sessionId) {
         throw new Error("Message, userId, and sessionId are required");
       }
@@ -56,6 +57,7 @@ export function useStreamingManager({
         message: message.trim(),
         userId,
         sessionId,
+        files: files || undefined,
       };
 
       try {

@@ -16,6 +16,7 @@ import { Message } from "@/types";
 import { ProcessedEvent } from "@/components/ActivityTimeline";
 import { toast } from "sonner";
 import { loadSessionHistoryAction } from "@/lib/actions/session-history-actions";
+import { UploadedFile } from "@/components/FileUpload";
 
 // Context value interface - consolidates all chat state and actions
 export interface ChatContextValue {
@@ -42,6 +43,7 @@ export interface ChatContextValue {
   // Message actions
   handleSubmit: (
     query: string,
+    files?: UploadedFile[],
     requestUserId?: string,
     requestSessionId?: string
   ) => Promise<void>;
@@ -310,6 +312,7 @@ export function ChatProvider({
   const handleSubmit = useCallback(
     async (
       query: string,
+      files?: UploadedFile[],
       requestUserId?: string,
       requestSessionId?: string
     ): Promise<void> => {
@@ -331,17 +334,19 @@ export function ChatProvider({
           );
         }
 
-        // Add user message to chat immediately
+        // Add user message to chat immediately (with file info if present)
         const userMessage: Message = {
           type: "human",
-          content: query,
+          content: files && files.length > 0
+            ? `${query}\n\n[Attached ${files.length} file(s): ${files.map(f => `${f.name} (${f.category})`).join(', ')}]`
+            : query,
           id: `user-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
           timestamp: new Date(),
         };
         addMessage(userMessage);
 
         // Submit message for streaming - the backend will provide AI response
-        await streamingManager.submitMessage(query);
+        await streamingManager.submitMessage(query, files);
       } catch (error) {
         console.error("Error submitting message:", error);
         // Don't create fake error messages - let the UI handle the error state

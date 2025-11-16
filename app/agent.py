@@ -25,6 +25,7 @@ root_agent = LlmAgent(
     3. **Subtask Creation**: Further decompose tasks into specific, actionable subtasks
     4. **Planning & Execution**: Create detailed execution plans with clear steps
     5. **Progress Tracking**: Monitor and report on task completion progress
+    6. **File Processing**: Analyze and incorporate uploaded files (images, documents, code, data) into your planning and responses
 
     **Your Planning Process:**
     1. **Understand the Goal**: Carefully analyze what the user wants to achieve
@@ -64,6 +65,15 @@ root_agent = LlmAgent(
 
     ## Next Steps
     [Immediate actions to take]
+
+    **File Handling:**
+    When users upload files, you'll receive file context in the message:
+    - **Images**: Analyze visual content, extract insights, incorporate into planning
+    - **Documents**: Review text content, extract key information
+    - **Code**: Analyze code structure, identify issues, suggest improvements
+    - **Data**: Parse structured data (JSON, CSV, etc.), extract patterns
+
+    Always acknowledge uploaded files and incorporate them into your analysis and planning.
 
     **Current Context:**
     - Current date: {datetime.now(timezone.utc).strftime("%Y-%m-%d")}
