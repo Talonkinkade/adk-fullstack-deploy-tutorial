@@ -30,10 +30,12 @@ By default the frontend runs at `http://localhost:3000` and proxies chat request
 ## Features
 
 - Goal-planning LLM agent powered by Google ADK (`app/agent.py`)
+- **LearnQwest Agents**: Suite of specialized agents for filesystem, documentation, and workflow automation (`app/learnqwest_agents.py`)
 - Environment-driven routing to either local backend or Vertex AI Agent Engine
 - Robust SSE pipeline with JSON-fragment processing for Agent Engine
 - Chat UI with message list, streaming content, and activity timeline
 - Health checks and helpful error formatting
+- **MCP Filesystem Integration**: Secure file access through Model Context Protocol
 
 ## Tech Stack
 
@@ -211,6 +213,64 @@ Use `NEXTJS_VERCEL_DEPLOYMENT_GUIDE.md` for step-by-step instructions. In short:
 ## Health Checks
 
 `GET /api/health` on the frontend forwards to the backend health endpoint (`/health`). Configure backend URL/endpoint via env as described above.
+
+## LearnQwest Agents
+
+This repository includes a comprehensive suite of specialized AI agents designed for the LearnQwest ecosystem:
+
+### Available Agents
+
+1. **LearnQwest Filesystem Agent** (`learnqwest-filesystem-agent`)
+   - Intelligent file and directory management
+   - File organization, reading, writing, and analysis
+   - Secure operations with built-in safety checks
+
+2. **LearnQwest Documentation Agent** (`learnqwest-documentation-agent`)
+   - Automated documentation generation and maintenance
+   - Creates README files, API docs, guides, and tutorials
+   - Maintains consistent formatting and best practices
+
+3. **LearnQwest Workflow Agent** (`learnqwest-workflow-agent`)
+   - Designs and automates workflows
+   - Integrates different tools and systems
+   - Optimizes repetitive tasks
+
+4. **LearnQwest Orchestrator Agent** (`learnqwest-orchestrator`)
+   - Master coordinator for complex multi-agent tasks
+   - Orchestrates filesystem, documentation, and workflow agents
+   - Handles end-to-end task completion
+
+### Quick Start with LearnQwest Agents
+
+1. **Set up MCP Filesystem** (for Claude Desktop/Cursor):
+   ```bash
+   # See LEARNQWEST_MCP_SETUP_GUIDE.md for complete instructions
+   ```
+
+2. **Import LearnQwest agents** in your code:
+   ```python
+   from app.learnqwest_agents import (
+       learnqwest_filesystem_agent,
+       learnqwest_documentation_agent,
+       learnqwest_workflow_agent,
+       learnqwest_orchestrator_agent,
+   )
+   ```
+
+3. **Use an agent:**
+   ```python
+   # Example: Use the orchestrator for complex tasks
+   response = learnqwest_orchestrator_agent.run(
+       "Set up a new Python project with documentation and workflows"
+   )
+   ```
+
+### Documentation
+
+- **Complete Agent Documentation**: See `LEARNQWEST_AGENTS_DOCUMENTATION.md`
+- **MCP Setup Guide**: See `LEARNQWEST_MCP_SETUP_GUIDE.md`
+
+The LearnQwest agents integrate seamlessly with the MCP Filesystem Server to provide secure, intelligent file management and automation capabilities.
 
 ## Troubleshooting
 
