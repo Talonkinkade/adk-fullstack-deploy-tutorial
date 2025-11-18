@@ -1,0 +1,274 @@
+---
+title: ADA Workflow - TeamLink Master Control
+description: Visual orchestration of AI agent crews across project phases
+---
+
+%%{init: {'theme':'dark', 'themeVariables': { 'fontSize':'16px'}}}%%
+
+graph TB
+    %% ====================================================================
+    %% ADA MASTER WORKFLOW - 8 PHASE ORCHESTRATION SYSTEM
+    %% ====================================================================
+
+    %% PHASE NODES
+    START([🎯 USER REQUEST])
+    P1[Phase 1: Context Gathering<br/>📋 Scan repo, docs, git history]
+    P2[Phase 2: Baseline Establishment<br/>📸 Snapshot current state]
+    P3[Phase 3: Milestone Definition<br/>🎯 Define success criteria]
+    P4[Phase 4: Agent Dispatch<br/>🤖 Form crew & generate prompts]
+    P5[Phase 5: Code Execution<br/>⚙️ Agents work on tasks]
+    P6[Phase 6: Validation<br/>✅ Test & verify deliverables]
+    P7[Phase 7: Achievement Documentation<br/>📝 Record decisions & outcomes]
+    P8[Phase 8: Mermaid Update<br/>🎨 Update this workflow diagram]
+    END([✅ SESSION COMPLETE])
+
+    %% MAIN WORKFLOW
+    START --> P1
+    P1 --> P2
+    P2 --> P3
+    P3 --> P4
+    P4 --> P5
+    P5 --> P6
+    P6 -->|Tests Pass| P7
+    P6 -->|Tests Fail| P5
+    P7 --> P8
+    P8 --> END
+
+    %% ====================================================================
+    %% CREW FORMATION DECISION TREE (Phase 4 Detail)
+    %% ====================================================================
+
+    subgraph CrewFormation["🤖 Crew Formation (Phase 4 Detail)"]
+        direction TB
+        CF1{Task Complexity?}
+        CF2[Solo Agent<br/>Single agent handles task]
+        CF3{Dependencies?}
+        CF4[Sequential Crew<br/>Agent A → B → C]
+        CF5[Parallel Crew<br/>Agents work simultaneously]
+        CF6{Uncertainty High?}
+        CF7[Enable Dynamic Spawning]
+        CF8[Fixed Roster]
+
+        CF1 -->|Simple| CF2
+        CF1 -->|Complex| CF3
+        CF3 -->|Yes| CF4
+        CF3 -->|No| CF5
+        CF4 --> CF6
+        CF5 --> CF6
+        CF6 -->|Yes| CF7
+        CF6 -->|No| CF8
+    end
+
+    P4 -.->|Detailed View| CF1
+
+    %% ====================================================================
+    %% AGENT ROSTER
+    %% ====================================================================
+
+    subgraph AgentRoster["🎭 Agent Roster"]
+        direction LR
+        A1[Claude-Code<br/>🏗️ Architect]
+        A2[Aider<br/>⚙️ Code Generator]
+        A3[Windsurf<br/>✅ Validator]
+        A4[Parser-Ion<br/>📄 Parser/Docs]
+        A5[Cline<br/>🔬 Specialist]
+    end
+
+    %% ====================================================================
+    %% CREW TYPE EXAMPLES
+    %% ====================================================================
+
+    subgraph CrewTypes["🎯 Crew Type Examples"]
+        direction TB
+
+        subgraph Solo["Solo Mission"]
+            S1[Claude-Code]
+            S1 -.->|Simple refactoring| S1
+        end
+
+        subgraph Sequential["Sequential Crew"]
+            direction LR
+            SQ1[Claude-Code<br/>Design] --> SQ2[Aider<br/>Implement]
+            SQ2 --> SQ3[Windsurf<br/>Validate]
+        end
+
+        subgraph Parallel["Parallel Crew"]
+            direction TB
+            PA1[Aider<br/>Backend API]
+            PA2[Cline<br/>Frontend UI]
+            PA3[Windsurf<br/>Integration Test]
+            PA1 --> PA3
+            PA2 --> PA3
+        end
+
+        subgraph Dynamic["Dynamic Task Force"]
+            direction TB
+            DY1[Claude-Code<br/>Analyze]
+            DY2[Spawn Specialist<br/>As Needed]
+            DY3[Windsurf<br/>Validate]
+            DY1 --> DY2
+            DY2 --> DY3
+        end
+    end
+
+    %% ====================================================================
+    %% BMAD INTEGRATION
+    %% ====================================================================
+
+    subgraph BMAD["📋 BMAD Document Structure"]
+        direction TB
+        B1[B: BASELINE<br/>Current state snapshot]
+        B2[M: MILESTONE<br/>Success criteria]
+        B3[A: AGENT DISPATCH<br/>Crew assignments]
+        B4[D: DOCUMENTATION<br/>Outcomes & decisions]
+
+        B1 --> B2
+        B2 --> B3
+        B3 --> B4
+    end
+
+    P2 -.->|Creates| B1
+    P3 -.->|Creates| B2
+    P4 -.->|Creates| B3
+    P7 -.->|Creates| B4
+
+    %% ====================================================================
+    %% VALIDATION LOOP
+    %% ====================================================================
+
+    subgraph ValidationLoop["✅ Validation Process"]
+        direction TB
+        V1[Run Tests]
+        V2{All Pass?}
+        V3[Check Success Criteria]
+        V4[Code Quality Checks]
+        V5[Generate Report]
+
+        V1 --> V2
+        V2 -->|Yes| V3
+        V2 -->|No| V1
+        V3 --> V4
+        V4 --> V5
+    end
+
+    P6 -.->|Executes| V1
+
+    %% ====================================================================
+    %% SESSION HISTORY (APPENDABLE SECTION)
+    %% ====================================================================
+    %%
+    %% Each completed session gets added here as a node
+    %% Format: SXX[Session Name<br/>Date<br/>Status]
+    %% Link to BMAD file with: click SXX "path/to/BMAD.md"
+    %%
+    %% ====================================================================
+
+    subgraph SessionHistory["📚 Session History (Append New Sessions Here)"]
+        direction LR
+
+        %% TEMPLATE for new sessions:
+        %% SXX[Session XXX: Title<br/>YYYY-MM-DD<br/>✅ Status]
+        %% click SXX "docs/sessions/BMAD/YYYY-MM-DD_Title.md"
+
+        S001[Session 001: ADA System Bootstrap<br/>2025-11-18<br/>✅ COMPLETE]
+
+        %% Add new sessions below as they complete:
+        %% S002[Session 002: Your Next Task<br/>YYYY-MM-DD<br/>🔄 IN PROGRESS]
+    end
+
+    %% Link sessions to each other (shows flow between sessions)
+    %% S001 -->|Enables| S002
+
+    %% Link completed workflow to session history
+    END -.->|Archives to| SessionHistory
+
+    %% ====================================================================
+    %% CLICKABLE LINKS (Update these with your actual file paths)
+    %% ====================================================================
+
+    click S001 "docs/sessions/BMAD/2025-11-18_ADA-System-Bootstrap.md" "View Session 001 BMAD"
+    click P1 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-1-context-gathering" "Phase 1 Details"
+    click P2 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-2-baseline-establishment" "Phase 2 Details"
+    click P3 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-3-milestone-definition" "Phase 3 Details"
+    click P4 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-4-agent-dispatch-crew-formation" "Phase 4 Details"
+    click P5 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-5-code-execution-crew-active" "Phase 5 Details"
+    click P6 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-6-validation--testing" "Phase 6 Details"
+    click P7 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-7-achievement-documentation" "Phase 7 Details"
+    click P8 "docs/ada-system/MASTER_ORCHESTRATION_PROMPT.md#phase-8-mermaid-workflow-update" "Phase 8 Details"
+
+    %% ====================================================================
+    %% STYLING
+    %% ====================================================================
+
+    %% Phase colors (by type)
+    classDef setupPhase fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
+    classDef planningPhase fill:#7c3aed,stroke:#6d28d9,stroke-width:3px,color:#fff
+    classDef executionPhase fill:#059669,stroke:#047857,stroke-width:3px,color:#fff
+    classDef validationPhase fill:#dc2626,stroke:#b91c1c,stroke-width:3px,color:#fff
+    classDef documentationPhase fill:#ea580c,stroke:#c2410c,stroke-width:3px,color:#fff
+    classDef decisionNode fill:#fbbf24,stroke:#f59e0b,stroke-width:2px,color:#000
+
+    %% Apply styles
+    class P1,P2 setupPhase
+    class P3,P4 planningPhase
+    class P5 executionPhase
+    class P6 validationPhase
+    class P7,P8 documentationPhase
+    class CF1,CF3,CF6,V2 decisionNode
+
+    %% Agent roster styling
+    classDef architect fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#fff
+    classDef generator fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    classDef validator fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
+    classDef parser fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#fff
+    classDef specialist fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff
+
+    class A1 architect
+    class A2 generator
+    class A3 validator
+    class A4 parser
+    class A5 specialist
+
+    %% Session history styling
+    classDef sessionComplete fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    classDef sessionInProgress fill:#fbbf24,stroke:#f59e0b,stroke-width:2px,color:#000
+    classDef sessionFailed fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
+
+    class S001 sessionComplete
+
+%% ====================================================================
+%% USAGE INSTRUCTIONS
+%% ====================================================================
+%%
+%% 1. VIEW THIS DIAGRAM:
+%%    - Paste into Mermaid Live Editor: https://mermaid.live
+%%    - Or use VSCode with Mermaid extension
+%%    - Or render in GitHub/GitLab markdown
+%%
+%% 2. UPDATE AFTER EACH SESSION:
+%%    - Add new session node to SessionHistory subgraph
+%%    - Link to BMAD file with click directive
+%%    - Connect session nodes to show dependencies
+%%    - Update session status with appropriate emoji
+%%
+%% 3. SESSION STATUS EMOJIS:
+%%    ✅ COMPLETE
+%%    🔄 IN PROGRESS
+%%    ⏸️ PAUSED
+%%    ❌ FAILED
+%%    ⚠️ BLOCKED
+%%
+%% 4. COLOR CODING:
+%%    🔵 Blue = Setup/Context phases
+%%    🟣 Purple = Planning phases
+%%    🟢 Green = Execution/Implementation
+%%    🔴 Red = Validation/Testing
+%%    🟠 Orange = Documentation
+%%    🟡 Yellow = Decision points
+%%
+%% 5. APPENDABLE HISTORY:
+%%    Every session adds a node to SessionHistory
+%%    Never delete old sessions - build up the timeline
+%%    Use arrows to show which sessions enabled others
+%%
+%% ====================================================================
